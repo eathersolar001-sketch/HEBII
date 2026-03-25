@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HEBI - Boutique</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ======= NAVBAR ======= -->
+  <header class="navbar">
+    <div class="navbar-left">
+      <div class="logo">
+        <img src="logo.png" alt="Logo de la marque">
+      </div>
+      <nav class="nav-links">
+        <a href="index.html">Accueil</a>
+        <a href="nouveaute.html">Nouveauté</a>
+        <a href="boutique.html" class="active">Boutique</a>
+        <a href="panier.html">Panier</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ======= SECTION BOUTIQUE ======= -->
+  <section class="boutique">
+    <div class="container">
+      <h1>Nos T-shirts</h1>
+      <p class="intro-text">Découvre notre collection exclusive de t-shirts modernes, confortables et stylés.</p>
+
+      <div class="produits-grid">
+        <!-- Produit 1 -->
+        <article class="produit">
+          <img src="tshirt1.jpg" alt="T-shirt Classique Blanc">
+          <h3>T-shirt Classique Blanc</h3>
+          <p class="prix">24,99 €</p>
+          <button class="btn-ajout" data-nom="T-shirt Classique Blanc" data-prix="24.99">Ajouter au panier</button>
+        </article>
+
+        <!-- Produit 2 -->
+        <article class="produit">
+          <img src="tshirt2.jpg" alt="T-shirt Noir Oversize">
+          <h3>T-shirt Noir Oversize</h3>
+          <p class="prix">29,99 €</p>
+          <button class="btn-ajout" data-nom="T-shirt Noir Oversize" data-prix="29.99">Ajouter au panier</button>
+        </article>
+
+        <!-- Produit 3 -->
+        <article class="produit">
+          <img src="tshirt3.jpg" alt="T-shirt Graphique Street">
+          <h3>T-shirt Graphique Street</h3>
+          <p class="prix">34,99 €</p>
+          <button class="btn-ajout" data-nom="T-shirt Graphique Street" data-prix="34.99">Ajouter au panier</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= FOOTER ======= -->
+  <footer class="footer">
+    <p>&copy; 2025 HEBI — Tous droits réservés</p>
+  </footer>
+
+  <!-- ======= SCRIPT PANIER ======= -->
+  <script>
+    const boutonsAjout = document.querySelectorAll('.btn-ajout');
+
+    boutonsAjout.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const nom = btn.getAttribute('data-nom');
+        const prix = parseFloat(btn.getAttribute('data-prix'));
+
+        let panier = JSON.parse(localStorage.getItem('panier')) || [];
+        const produitExistant = panier.find(item => item.nom === nom);
+
+        if (produitExistant) {
+          produitExistant.quantite += 1;
+        } else {
+          panier.push({ nom, prix, quantite: 1 });
+        }
+
+        localStorage.setItem('panier', JSON.stringify(panier));
+        alert(nom + " a été ajouté au panier !");
+      });
+    });
+  </script>
+
+</body>
+</html>
+

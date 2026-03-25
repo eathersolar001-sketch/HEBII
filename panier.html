@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HEBI - Panier</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ======= NAVBAR ======= -->
+  <header class="navbar">
+    <div class="navbar-left">
+      <div class="logo">
+        <img src="logo.png" alt="Logo de la marque">
+      </div>
+      <nav class="nav-links">
+        <a href="index.html">Accueil</a>
+        <a href="nouveaute.html">Nouveauté</a>
+        <a href="boutique.html">Boutique</a>
+        <a href="panier.html" class="active">Panier</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ======= SECTION PANIER ======= -->
+  <section class="panier">
+    <div class="container">
+      <h1>Votre panier</h1>
+      <p class="intro-text">Voici les articles que vous avez ajoutés. Vous pouvez modifier les quantités, supprimer des produits, ou procéder au paiement.</p>
+
+      <div id="panier-contenu" class="panier-contenu">
+        <!-- Les articles du panier s’afficheront ici -->
+      </div>
+
+      <div class="panier-total">
+        <h2>Total : <span id="total-prix">0.00 €</span></h2>
+        <div class="panier-actions">
+          <button id="vider-panier" class="btn-secondaire">Vider le panier</button>
+          <button id="payer" class="btn-primary">Procéder au paiement</button>
+        </div>
+      </div>
+
+      <p id="panier-vide" class="panier-vide" style="display: none;">Votre panier est vide pour le moment.</p>
+    </div>
+  </section>
+
+  <!-- ======= FOOTER ======= -->
+  <footer class="footer">
+    <p>&copy; 2025 HEBI — Tous droits réservés</p>
+  </footer>
+
+  <!-- ======= SCRIPT PANIER ======= -->
+  <script>
+    const panierContenu = document.getElementById('panier-contenu');
+    const totalPrix = document.getElementById('total-prix');
+    const panierVide = document.getElementById('panier-vide');
+    const viderBtn = document.getElementById('vider-panier');
+
+    function afficherPanier() {
+      let panier = JSON.parse(localStorage.getItem('panier')) || [];
+
+      panierContenu.innerHTML = '';
+      if (panier.length === 0) {
+        panierVide.style.display = 'block';
+        totalPrix.textContent = "0.00 €";
+        return;
+      }
+
+      panierVide.style.display = 'none';
+      let total = 0;
+
+      panier.forEach((item, index) => {
+        total += item.prix * item.quantite;
+
+        const article = document.createElement('div');
+        article.classList.add('article-panier');
+        article.innerHTML = `
+          <div class="article-info">
+            <h3>${item.nom}</h3>
+            <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
+            <p>Quantité : 
+              <button class="btn-qte" onclick="modifierQuantite(${index}, -1)">−</button>
+              <span>${item.quantite}</span>
+              <button class="btn-qte" onclick="modifierQuantite(${index}, 1)">+</button>
+            </p>
+          </div>
+          <button class="btn-supprimer" onclick="supprimerArticle(${index})">Supprimer</button>
+        `;
+        panierContenu.appendChild(article);
+      });
+
+      totalPrix.textContent = total.toFixed(2) + " €";
+    }
+
+    function supprimerArticle(index) {
+      let panier = JSON.parse(localStorage.getItem('panier')) || [];
+      panier.splice(index, 1);
+      localStorage.setItem('panier', JSON.stringify(panier));
+      afficherPanier();
+    }
+
+    function modifierQuantite(index, delta) {
+      let panier = JSON.parse(localStorage.getItem('panier')) || [];
+      panier[index].quantite += delta;
+      if (panier[index].quantite <= 0) panier.splice(index, 1);
+      localStorage.setItem('panier', JSON.stringify(panier));
+      afficherPanier();
+    }
+
+    viderBtn.addEventListener('click', () => {
+      if (confirm("Voulez-vous vraiment vider le panier ?")) {
+        localStorage.removeItem('panier');
+        afficherPanier();
+      }
+    });
+
+    document.getElementById('payer').addEventListener('click', () => {
+      alert("Le paiement en ligne sera bientôt disponible !");
+    });
+
+    afficherPanier();
+  </script>
+
+</body>
+</html>
